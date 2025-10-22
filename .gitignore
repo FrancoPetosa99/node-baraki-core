@@ -1,0 +1,6 @@
+# dependencies
+/node_modules
+./.env
+/src/config/db.js
+.env
+node_modules/
