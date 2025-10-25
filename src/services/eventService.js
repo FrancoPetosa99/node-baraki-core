@@ -1,7 +1,7 @@
-const employeeRepository = require('../repositories/employeeRepository');
+const eventRepository = require('../repositories/eventRepository');
 const assignmentRepository = require('../repositories/assignmentRepository');
 
-class EmployeeService {
+class EventService {
     async create(data) {
        
     }
@@ -14,7 +14,7 @@ class EmployeeService {
        
     }
 
-    async getEventsByEmployee(employeeId) {
+    async getEmployeesByEvent(eventId) {
     
     }
 
@@ -27,4 +27,4 @@ class EmployeeService {
     }
 }
 
-module.exports = new EmployeeService();
+module.exports = new EventService();

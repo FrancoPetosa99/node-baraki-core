@@ -1,5 +1,4 @@
-const Assignment = require('../models/assignment');
-const Event = require('../models/event');
+const assignmentRepository = require('../repositories/assignmentRepository');
 
 class AssignmentService {
     async create(data) {

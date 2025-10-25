@@ -1,3 +1,5 @@
+const employeeService = require('../services/employeeService');
+
 class EmployeeController {    
     createEmployee = async (request, response) => {
         return response

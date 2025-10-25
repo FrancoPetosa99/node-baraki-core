@@ -1,3 +1,5 @@
+const eventService = require('../services/eventService');
+
 class EventsController {    
     createEvent = async (request, response) => {
         return response

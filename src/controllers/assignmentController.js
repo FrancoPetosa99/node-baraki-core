@@ -1,3 +1,5 @@
+const AssignmentService = require('../services/assignmentService');
+
 class AssignmentController {    
     createAssignment = async (request, response) => {
         return response

@@ -1,5 +1,5 @@
-const Assignment = require('../models/assignment');
 const mongoose = require('mongoose');
+const Assignment = require('../models/assignment');
 
 class AssignmentRepository {    
     async create(data) {

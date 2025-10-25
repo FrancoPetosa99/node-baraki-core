@@ -1,5 +1,5 @@
-const Employee = require('../models/employee');
 const mongoose = require('mongoose');
+const Employee = require('../models/employee');
 
 class EmployeeRepository {
     async create(data) {
