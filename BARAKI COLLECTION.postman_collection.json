@@ -1,0 +1,754 @@
+{
+	"info": {
+		"_postman_id": "9e253b49-0ad0-4514-9aaa-085898d68e35",
+		"name": "BARAKI COLLECTION",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25469436"
+	},
+	"item": [
+		{
+			"name": "authentication",
+			"item": [
+				{
+					"name": "1.REGISTER - /api/auth/register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"test1\" ,\n    \"last_name\": \"test1\" ,\n    \"email\": \"test1@gmail.com\",\n    \"password\": \"12345678\"\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.LOGIN - /api/auth/login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test1@gmail.com\",\n    \"password\": \"12345678\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "events",
+			"item": [
+				{
+					"name": "guests",
+					"item": [
+						{
+							"name": "1. ADD GUEST - api/events/:id/guest",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MDVmY2ViMTczZTQyNDI0N2JkYTJiYSIsImVtYWlsIjoidGVzdDFAZ21haWwuY29tIiwiaWF0IjoxNzYyMDE3NTYwLCJleHAiOjE3NjIxMDM5NjB9.hpoo9Lp5noN-ddlXP69Z5-JepnKfGYlZdNrvvHsv238",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \n    \"first_name\": \"isa\", \n    \"last_name\":  \"bre\", \n    \"email\":  \"bresciani@gmail.com\", \n    \"assist\": \"true\" }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/events/6906451758ed3be42d3248aa/guest",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"events",
+										"6906451758ed3be42d3248aa",
+										"guest"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "2. GET GUESTS - api/events/:id/guest",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MDVmY2ViMTczZTQyNDI0N2JkYTJiYSIsImVtYWlsIjoidGVzdDFAZ21haWwuY29tIiwiaWF0IjoxNzYyMDE3NTYwLCJleHAiOjE3NjIxMDM5NjB9.hpoo9Lp5noN-ddlXP69Z5-JepnKfGYlZdNrvvHsv238",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \n    \"first_name\": \"isa\", \n    \"last_name\":  \"bre\", \n    \"email\":  \"bresciani@gmail.com\", \n    \"assist\": \"true\" }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/events/6906451758ed3be42d3248aa/guests",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"events",
+										"6906451758ed3be42d3248aa",
+										"guests"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "3. DELETE GUESTS - api/events/:id/guest/:id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MDVmY2ViMTczZTQyNDI0N2JkYTJiYSIsImVtYWlsIjoidGVzdDFAZ21haWwuY29tIiwiaWF0IjoxNzYyMDE3NTYwLCJleHAiOjE3NjIxMDM5NjB9.hpoo9Lp5noN-ddlXP69Z5-JepnKfGYlZdNrvvHsv238",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{ \n    \"first_name\": \"isa\", \n    \"last_name\":  \"bre\", \n    \"email\":  \"bresciani@gmail.com\", \n    \"assist\": \"true\" }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/events/6906451758ed3be42d3248aa/guests",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"events",
+										"6906451758ed3be42d3248aa",
+										"guests"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "additionals",
+					"item": [
+						{
+							"name": "1.GET INVITATION - api/events/:id/invitations",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "2.GET EMPLOYEES - api/events/:id/invitations Copy",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						},
+						{
+							"name": "3.GET EVENTS -  /api/events/",
+							"request": {
+								"method": "GET",
+								"header": []
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "1.CREATE EVENT - /api/events",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test1@gmail.com\",\n    \"password\": \"12345678\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/events",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"events"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.GET EVENT - /api/events/:id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MDVmY2ViMTczZTQyNDI0N2JkYTJiYSIsImVtYWlsIjoidGVzdDFAZ21haWwuY29tIiwiaWF0IjoxNzYyMDE3NTYwLCJleHAiOjE3NjIxMDM5NjB9.hpoo9Lp5noN-ddlXP69Z5-JepnKfGYlZdNrvvHsv238",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test1@gmail.com\",\n    \"password\": \"12345678\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/events/690642c958ed3be42d324887",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"events",
+								"690642c958ed3be42d324887"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.UPDATE EVENT - /api/events/:id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MDVmY2ViMTczZTQyNDI0N2JkYTJiYSIsImVtYWlsIjoidGVzdDFAZ21haWwuY29tIiwiaWF0IjoxNzYyMDE3NTYwLCJleHAiOjE3NjIxMDM5NjB9.hpoo9Lp5noN-ddlXP69Z5-JepnKfGYlZdNrvvHsv238",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"date\": \"2026-02-01T00:00:00.000Z\",\n        \"status\": \"PENDING\",\n        \"start_time\": \"19:00\",\n        \"end_time\": \"23:00\",\n        \"host\": {\n            \"first_name\": \"Loan\",\n            \"last_name\": \"Doe\",\n            \"email\": \"john@example.com\",\n            \"phone\": \"+1234567890\",\n            \"_id\": \"690642c958ed3be42d324888\"\n        },\n        \"payment\": {\n            \"total_price\": 5000,\n            \"advanced_payment\": 2000,\n            \"status\": \"PENDING\",\n            \"_id\": \"690642c958ed3be42d324889\"\n        },\n        \"assignments\": [],\n        \"invitation\": {\n            \"title\": \"New Year DEA\",\n            \"image_url\": \"https://example.com/invite.jpg\",\n            \"_id\": \"690642c958ed3be42d32488a\"\n        },\n        \"confirmed_guests\": [],\n        \"_id\": \"690642c958ed3be42d324887\",\n        \"createdAt\": \"2025-11-01T17:26:33.544Z\",\n        \"updatedAt\": \"2025-11-01T17:26:33.544Z\",\n        \"__v\": 0\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/events/690641ea58ed3be42d32487c",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"events",
+								"690641ea58ed3be42d32487c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4.DELETE EVENT - /api/events/:id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MDVmY2ViMTczZTQyNDI0N2JkYTJiYSIsImVtYWlsIjoidGVzdDFAZ21haWwuY29tIiwiaWF0IjoxNzYyMDE3NTYwLCJleHAiOjE3NjIxMDM5NjB9.hpoo9Lp5noN-ddlXP69Z5-JepnKfGYlZdNrvvHsv238",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test1@gmail.com\",\n    \"password\": \"12345678\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/events/690641ea58ed3be42d32487c",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"events",
+								"690641ea58ed3be42d32487c"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "employees",
+			"item": [
+				{
+					"name": "1.CREATE EMPLOYEE - /api/employees/",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MDVmY2ViMTczZTQyNDI0N2JkYTJiYSIsImVtYWlsIjoidGVzdDFAZ21haWwuY29tIiwiaWF0IjoxNzYyMDE3NTYwLCJleHAiOjE3NjIxMDM5NjB9.hpoo9Lp5noN-ddlXP69Z5-JepnKfGYlZdNrvvHsv238",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"phone\": \"+1234567890\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/employees/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"employees",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2.GET EMPLOYEES - /api/employees/",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MDVmY2ViMTczZTQyNDI0N2JkYTJiYSIsImVtYWlsIjoidGVzdDFAZ21haWwuY29tIiwiaWF0IjoxNzYyMDE3NTYwLCJleHAiOjE3NjIxMDM5NjB9.hpoo9Lp5noN-ddlXP69Z5-JepnKfGYlZdNrvvHsv238",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/employees/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"employees",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3.GET EMPLOYEE - /api/employees/:id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MDVmY2ViMTczZTQyNDI0N2JkYTJiYSIsImVtYWlsIjoidGVzdDFAZ21haWwuY29tIiwiaWF0IjoxNzYyMDE3NTYwLCJleHAiOjE3NjIxMDM5NjB9.hpoo9Lp5noN-ddlXP69Z5-JepnKfGYlZdNrvvHsv238",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/employees/69064c71234a1405cfc7e9a3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"employees",
+								"69064c71234a1405cfc7e9a3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "4.MODIFY EMPLOYEE - /api/employees/:id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MDVmY2ViMTczZTQyNDI0N2JkYTJiYSIsImVtYWlsIjoidGVzdDFAZ21haWwuY29tIiwiaWF0IjoxNzYyMDE3NTYwLCJleHAiOjE3NjIxMDM5NjB9.hpoo9Lp5noN-ddlXP69Z5-JepnKfGYlZdNrvvHsv238",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"first_name\": \"william\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/employees/69064c71234a1405cfc7e9a3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"employees",
+								"69064c71234a1405cfc7e9a3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.DELETE EMPLOYEE - /api/employees/:id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MDVmY2ViMTczZTQyNDI0N2JkYTJiYSIsImVtYWlsIjoidGVzdDFAZ21haWwuY29tIiwiaWF0IjoxNzYyMDE3NTYwLCJleHAiOjE3NjIxMDM5NjB9.hpoo9Lp5noN-ddlXP69Z5-JepnKfGYlZdNrvvHsv238",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"first_name\": \"william\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/employees/69064b6e234a1405cfc7e989",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"employees",
+								"69064b6e234a1405cfc7e989"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "5.GET EMPLOYEE EVENTS - /api/employees/:id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MDVmY2ViMTczZTQyNDI0N2JkYTJiYSIsImVtYWlsIjoidGVzdDFAZ21haWwuY29tIiwiaWF0IjoxNzYyMDE3NTYwLCJleHAiOjE3NjIxMDM5NjB9.hpoo9Lp5noN-ddlXP69Z5-JepnKfGYlZdNrvvHsv238",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"first_name\": \"william\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/employees/69064c71234a1405cfc7e9a3/events",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"employees",
+								"69064c71234a1405cfc7e9a3",
+								"events"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "assignments",
+			"item": [
+				{
+					"name": "1. CREATE ASSIGNMENT - assignments/events/:event_id/employees/:employee_id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MDVmY2ViMTczZTQyNDI0N2JkYTJiYSIsImVtYWlsIjoidGVzdDFAZ21haWwuY29tIiwiaWF0IjoxNzYyMDE3NTYwLCJleHAiOjE3NjIxMDM5NjB9.hpoo9Lp5noN-ddlXP69Z5-JepnKfGYlZdNrvvHsv238",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"first_name\": \"william\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assignments/events/69064cc0234a1405cfc7e9ab/employees/69064c71234a1405cfc7e9a3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assignments",
+								"events",
+								"69064cc0234a1405cfc7e9ab",
+								"employees",
+								"69064c71234a1405cfc7e9a3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "2. UPDATE ASSIGNMENT - assignments/events/:event_id/employees/:employee_id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MDVmY2ViMTczZTQyNDI0N2JkYTJiYSIsImVtYWlsIjoidGVzdDFAZ21haWwuY29tIiwiaWF0IjoxNzYyMDE3NTYwLCJleHAiOjE3NjIxMDM5NjB9.hpoo9Lp5noN-ddlXP69Z5-JepnKfGYlZdNrvvHsv238",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"first_name\": \"william\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assignments/event/6906451758ed3be42d3248aa/employee/69064c71234a1405cfc7e9a3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assignments",
+								"event",
+								"6906451758ed3be42d3248aa",
+								"employee",
+								"69064c71234a1405cfc7e9a3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "3. DELETE ASSIGNMENT - assignments/events/:event_id/employees/:employee_id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MDVmY2ViMTczZTQyNDI0N2JkYTJiYSIsImVtYWlsIjoidGVzdDFAZ21haWwuY29tIiwiaWF0IjoxNzYyMDE3NTYwLCJleHAiOjE3NjIxMDM5NjB9.hpoo9Lp5noN-ddlXP69Z5-JepnKfGYlZdNrvvHsv238",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"first_name\": \"william\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/assignments/event/6906451758ed3be42d3248aa/employee/69064c71234a1405cfc7e9a3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"assignments",
+								"event",
+								"6906451758ed3be42d3248aa",
+								"employee",
+								"69064c71234a1405cfc7e9a3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
