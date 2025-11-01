@@ -1,42 +1,70 @@
-const BadRequestException = require('../exceptions/BadRequestException');
-const InternalServerExcepcion = require('../exceptions/InternalServerExcepcion');
-const authService = require('../services/AuthService'); 
+// controllers/AuthController.js
+const authService = require('../services/authService');
 
-class AuthController {    
-    login = async (request, response) => {
-        const { email, password } = request.body;
-        if (!email || !password) 
-            throw new BadRequestException('Email and password required');
-        
-        if (!process.env.JWT_SECRET) 
-            throw new InternalServerExcepcion('JWT secret key missing in current enviorment');
+class AuthController {
+  async register(req, res) {
+    try {
+      const result = await authService.register(req.body);
 
-        const authToken = await authService.generateAuthToken(email, password);
+      res.status(201).json({
+        success: true,
+        message: 'User registered successfully',
+        data: result
+      });
+    } catch (error) {
+      const status = error.status || 500;
+      res.status(status).json({
+        success: false,
+        message: error.message || 'Registration failed',
+        errors: error.errors || undefined
+      });
+    }
+  }
 
-        return response
-        .status(200)
-        .json({ 
-            statusCode: 200,
-            message: 'User successfully login',
-            authToken: authToken, 
+  async login(req, res) {
+    try {
+      const result = await authService.login(req.body);
+
+      res.status(200).json({
+        success: true,
+        message: 'Login successful',
+        data: result
+      });
+    } catch (error) {
+      const status = error.status || 500;
+      res.status(status).json({
+        success: false,
+        message: error.message || 'Login failed',
+        errors: error.errors || undefined
+      });
+    }
+  }
+
+  async verifyToken(req, res) {
+    try {
+      const token = req.headers.authorization?.replace('Bearer ', '');
+      
+      if (!token) {
+        return res.status(401).json({
+          success: false,
+          message: 'No token provided'
         });
-    };
+      }
 
-    register = async (request, response) => {
-        const { email, password } = request.body;
-        if (!email || !password) 
-            throw new BadRequestException('Email and password required');
+      const user = await authService.verifyToken(token);
 
-        const data = { email, password };
-        await authService.registerUser(data);
-        
-        return response
-        .status(201)
-        .json({ 
-            status: 'Success',
-            message: 'User successfully created'
-        });
-    };
+      res.status(200).json({
+        success: true,
+        data: { user: authService.sanitizeUser(user) }
+      });
+    } catch (error) {
+      const status = error.status || 500;
+      res.status(status).json({
+        success: false,
+        message: error.message || 'Token verification failed'
+      });
+    }
+  }
 }
 
 module.exports = new AuthController();
