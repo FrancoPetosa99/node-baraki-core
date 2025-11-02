@@ -4,6 +4,8 @@ const userRepository = require('../repositories/userRepository');
 const BadRequestException = require('../exceptions/BadRequestException');
 const NotFoundException = require('../exceptions/NotFoundException');
 const ConflictException = require('../exceptions/ConflictException');
+const ForbiddenException = require('../exceptions/ForbiddenException');
+const config = require("../config")
 
 class AuthService {
 
@@ -90,8 +92,6 @@ class AuthService {
       throw new ConflictException('User with this email already exists');
     }
 
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
 
       // Create user
       const user = await userRepository.create({
@@ -147,11 +147,8 @@ class AuthService {
 
   generateToken(user) {
     return jwt.sign(
-      { 
-        id: user._id.toString(),
-        email: user.email 
-      },
-      process.env.JWT_SECRET || 'your-secret-key',
+      { id: user._id.toString(), email: user.email },
+      config.jwtSecret,
       { expiresIn: '24h' }
     );
   }
@@ -179,7 +176,7 @@ class AuthService {
       return user;
     } catch (error) {
       if (error.name === 'JsonWebTokenError') {
-        throw new BadRequestException('Invalid token');
+        throw new ForbiddenException('Invalid token');
       }
       if (error.name === 'TokenExpiredError') {
         throw new BadRequestException('Token expired');

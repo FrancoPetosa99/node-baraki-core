@@ -15,11 +15,7 @@ const authMiddleware = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    const status = error.status || 401;
-    res.status(status).json({
-      success: false,
-      message: error.message || 'Authentication failed'
-    });
+    return next(error);
   }
 };
 

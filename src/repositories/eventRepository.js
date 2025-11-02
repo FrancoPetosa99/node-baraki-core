@@ -104,7 +104,7 @@ class EventRepository {
     return ev || null;
   }
 
-  async addAssignment(eventId, assignmentId) {
+  async addAssignment(eventId, assignmentId, { session } = {}) {
     if (!mongoose.Types.ObjectId.isValid(eventId) || !mongoose.Types.ObjectId.isValid(assignmentId)) {
       return null;
     }
@@ -112,11 +112,11 @@ class EventRepository {
     return Event.findByIdAndUpdate(
       eventId,
       { $addToSet: { assignments: new mongoose.Types.ObjectId(assignmentId) } },
-      { new: true }
+      { new: true, session }
     ).lean().exec();
   }
 
-  async removeAssignment(eventId, assignmentId) {
+  async removeAssignment(eventId, assignmentId, { session } = {}) {
     if (!mongoose.Types.ObjectId.isValid(eventId) || !mongoose.Types.ObjectId.isValid(assignmentId)) {
       return null;
     }
@@ -124,7 +124,7 @@ class EventRepository {
     return Event.findByIdAndUpdate(
       eventId,
       { $pull: { assignments: new mongoose.Types.ObjectId(assignmentId) } },
-      { new: true }
+      { new: true, session }
     ).lean().exec();
   }
 

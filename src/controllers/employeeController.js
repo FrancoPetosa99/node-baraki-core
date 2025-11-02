@@ -2,7 +2,7 @@ const employeeService = require('../services/employeeService');
 
 class EmployeeController {
 
-  async createEmployee(req, res) {
+  async createEmployee(req, res, next) {
     try {
       const employee = await employeeService.createEmployee(req.body, req.user._id);
 
@@ -12,17 +12,11 @@ class EmployeeController {
         data: employee
       });
     } catch (error) {
-      const status = error.statusCode || error.status || 500;
-      res.status(status).json({
-        success: false,
-        message: error.message || 'Failed to create employee',
-        details: error.details || error.errors || undefined,
-        timestamp: error.timestamp || undefined
-      });
+      return next(error);
     }
   }
 
-  async getEmployees(req, res) {
+  async getEmployees(req, res, next) {
     try {
       const result = await employeeService.getEmployees(req.query, req.user._id);
 
@@ -31,17 +25,11 @@ class EmployeeController {
         data: result
       });
     } catch (error) {
-      const status = error.statusCode || error.status || 500;
-      res.status(status).json({
-        success: false,
-        message: error.message || 'Failed to get employees',
-        details: error.details || undefined,
-        timestamp: error.timestamp || undefined
-      });
+      return next(error);
     }
   }
 
-  async getEmployee(req, res) {
+  async getEmployee(req, res, next) {
     try {
       const employee = await employeeService.getEmployee(req.params.id, req.user._id);
 
@@ -50,17 +38,11 @@ class EmployeeController {
         data: employee
       });
     } catch (error) {
-      const status = error.statusCode || error.status || 500;
-      res.status(status).json({
-        success: false,
-        message: error.message || 'Failed to get employee',
-        details: error.details || undefined,
-        timestamp: error.timestamp || undefined
-      });
+      return next(error);
     }
   }
 
-  async getEmployeeEvents(req, res) {
+  async getEmployeeEvents(req, res, next) {
     try {
       const events = await employeeService.getEmployeeEvents(req.params.id, req.user._id);
 
@@ -69,17 +51,11 @@ class EmployeeController {
         data: events
       });
     } catch (error) {
-      const status = error.statusCode || error.status || 500;
-      res.status(status).json({
-        success: false,
-        message: error.message || 'Failed to get employee events',
-        details: error.details || undefined,
-        timestamp: error.timestamp || undefined
-      });
+      return next(error);
     }
   }
 
-  async updateEmployee(req, res) {
+  async updateEmployee(req, res, next) {
     try {
       const employee = await employeeService.updateEmployee(
         req.params.id,
@@ -93,17 +69,11 @@ class EmployeeController {
         data: employee
       });
     } catch (error) {
-      const status = error.statusCode || error.status || 500;
-      res.status(status).json({
-        success: false,
-        message: error.message || 'Failed to update employee',
-        details: error.details || error.errors || undefined,
-        timestamp: error.timestamp || undefined
-      });
+      return next(error);
     }
   }
 
-  async deleteEmployee(req, res) {
+  async deleteEmployee(req, res, next) {
     try {
       const result = await employeeService.deleteEmployee(req.params.id, req.user._id);
 
@@ -112,13 +82,7 @@ class EmployeeController {
         message: result.message
       });
     } catch (error) {
-      const status = error.statusCode || error.status || 500;
-      res.status(status).json({
-        success: false,
-        message: error.message || 'Failed to delete employee',
-        details: error.details || undefined,
-        timestamp: error.timestamp || undefined
-      });
+      return next(error);
     }
   }
 }

@@ -21,12 +21,8 @@ app.use(cookieParser());
 app.use('/api', routes);
 
 //--------------------------------  Global Error Handler  -----------------------
-app.use((error, request, response) => {
-    const { statusCode, message, details, timestamp } = error;
-    return response
-    .status(statusCode)
-    .json({ status: 'Error', statusCode, message, details, timestamp, path: request.originalUrl });
-});
+const errorHandler = require('./src/middlewares/errorHandler');
+app.use(errorHandler);
 
 //--------------------------------  PORT  -------------------------------
 const db = require('./src/config/db');

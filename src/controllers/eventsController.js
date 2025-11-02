@@ -2,7 +2,7 @@ const eventService = require('../services/eventService');
 
 class EventController {
 
-  async createEvent(req, res) {
+  async createEvent(req, res, next) {
     try {
       const event = await eventService.createEvent(req.body, req.user._id);
 
@@ -12,17 +12,11 @@ class EventController {
         data: event
       });
     } catch (error) {
-      const status = error.statusCode || error.status || 500;
-      res.status(status).json({
-        success: false,
-        message: error.message || 'Failed to create event',
-        details: error.details || error.errors || undefined,
-        timestamp: error.timestamp || undefined
-      });
+      return next(error);
     }
   }
 
-  async searchEvents(req, res) {
+  async searchEvents(req, res, next) {
     try {
       const result = await eventService.searchEvents(req.query, req.user._id);
 
@@ -31,17 +25,11 @@ class EventController {
         data: result
       });
     } catch (error) {
-      const status = error.statusCode || error.status || 500;
-      res.status(status).json({
-        success: false,
-        message: error.message || 'Failed to search events',
-        details: error.details || undefined,
-        timestamp: error.timestamp || undefined
-      });
+      return next(error);
     }
   }
 
-  async getEvent(req, res) {
+  async getEvent(req, res, next) {
     try {
       const event = await eventService.getEvent(req.params.id, req.user._id);
 
@@ -50,17 +38,11 @@ class EventController {
         data: event
       });
     } catch (error) {
-      const status = error.statusCode || error.status || 500;
-      res.status(status).json({
-        success: false,
-        message: error.message || 'Failed to get event',
-        details: error.details || undefined,
-        timestamp: error.timestamp || undefined
-      });
+      return next(error);
     }
   }
 
-  async updateEvent(req, res) {
+  async updateEvent(req, res, next) {
     try {
       const event = await eventService.updateEvent(
         req.params.id,
@@ -74,17 +56,11 @@ class EventController {
         data: event
       });
     } catch (error) {
-      const status = error.statusCode || error.status || 500;
-      res.status(status).json({
-        success: false,
-        message: error.message || 'Failed to update event',
-        details: error.details || error.errors || undefined,
-        timestamp: error.timestamp || undefined
-      });
+      return next(error);
     }
   }
 
-  async deleteEvent(req, res) {
+  async deleteEvent(req, res, next) {
     try {
       const result = await eventService.deleteEvent(req.params.id, req.user._id);
 
@@ -93,17 +69,11 @@ class EventController {
         message: result.message
       });
     } catch (error) {
-      const status = error.statusCode || error.status || 500;
-      res.status(status).json({
-        success: false,
-        message: error.message || 'Failed to delete event',
-        details: error.details || undefined,
-        timestamp: error.timestamp || undefined
-      });
+      return next(error);
     }
   }
 
-  async addGuest(req, res) {
+  async addGuest(req, res, next) {
     try {
       const event = await eventService.addGuest(
         req.params.id,
@@ -117,17 +87,11 @@ class EventController {
         data: event
       });
     } catch (error) {
-      const status = error.statusCode || error.status || 500;
-      res.status(status).json({
-        success: false,
-        message: error.message || 'Failed to add guest',
-        details: error.details || error.errors || undefined,
-        timestamp: error.timestamp || undefined
-      });
+      return next(error);
     }
   }
 
-  async getEventGuests(req, res) {
+  async getEventGuests(req, res, next) {
     try {
       const guests = await eventService.getEventGuests(req.params.id, req.user._id);
 
@@ -136,17 +100,11 @@ class EventController {
         data: guests
       });
     } catch (error) {
-      const status = error.statusCode || error.status || 500;
-      res.status(status).json({
-        success: false,
-        message: error.message || 'Failed to get guests',
-        details: error.details || undefined,
-        timestamp: error.timestamp || undefined
-      });
+      return next(error);
     }
   }
 
-  async removeGuest(req, res) {
+  async removeGuest(req, res, next) {
     try {
       const result = await eventService.removeGuest(
         req.params.event_id,
@@ -159,17 +117,11 @@ class EventController {
         message: result.message
       });
     } catch (error) {
-      const status = error.statusCode || error.status || 500;
-      res.status(status).json({
-        success: false,
-        message: error.message || 'Failed to remove guest',
-        details: error.details || undefined,
-        timestamp: error.timestamp || undefined
-      });
+      return next(error);
     }
   }
 
-  async getEventEmployees(req, res) {
+  async getEventEmployees(req, res, next) {
     try {
       const employees = await eventService.getEventEmployees(
         req.params.id,
@@ -181,17 +133,11 @@ class EventController {
         data: employees
       });
     } catch (error) {
-      const status = error.statusCode || error.status || 500;
-      res.status(status).json({
-        success: false,
-        message: error.message || 'Failed to get event employees',
-        details: error.details || undefined,
-        timestamp: error.timestamp || undefined
-      });
+      return next(error);
     }
   }
 
-  async getEventInvitation(req, res) {
+  async getEventInvitation(req, res, next) {
     try {
       const invitation = await eventService.getEventInvitation(
         req.params.id,
@@ -203,13 +149,7 @@ class EventController {
         data: invitation
       });
     } catch (error) {
-      const status = error.statusCode || error.status || 500;
-      res.status(status).json({
-        success: false,
-        message: error.message || 'Failed to get invitation',
-        details: error.details || undefined,
-        timestamp: error.timestamp || undefined
-      });
+      return next(error);
     }
   }
 }

@@ -4,8 +4,10 @@ const Assignment = require('../models/assignment');
 
 class AssignmentRepository {
 
-  async create(data) {
-    return Assignment.create(data);
+  async create(data, { session } = {}) {
+    const assignment = new Assignment(data);
+    if (session) return assignment.save({ session });
+    return assignment.save();
   }
 
   async findById(id, { populate = [] } = {}) {
@@ -39,9 +41,10 @@ class AssignmentRepository {
     return Assignment.findByIdAndUpdate(id, update, { new: newDoc, runValidators: true }).lean().exec();
   }
 
-  async deleteById(id) {
+  async deleteById(id, { session } = {}) {
     if (!mongoose.Types.ObjectId.isValid(id)) return null;
-    return Assignment.findByIdAndDelete(id).lean().exec();
+    // pass session in options to the query
+    return Assignment.findByIdAndDelete(id, { session }).lean().exec();
   }
 
   async deleteMany(filter = {}) {

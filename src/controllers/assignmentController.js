@@ -2,7 +2,7 @@ const assignmentService = require('../services/AssignmentService');
 
 class AssignmentController {
 
-  async createAssignment(req, res) {
+  async createAssignment(req, res, next) {
     try {
       const { event_id, employee_id } = req.params;
       
@@ -19,17 +19,11 @@ class AssignmentController {
         data: assignment
       });
     } catch (error) {
-      const status = error.statusCode || error.status || 500;
-      res.status(status).json({
-        success: false,
-        message: error.message || 'Failed to create assignment',
-        details: error.details || error.errors || undefined,
-        timestamp: error.timestamp || undefined
-      });
+      return next(error);
     }
   }
 
-  async updateAssignment(req, res) {
+  async updateAssignment(req, res, next) {
     try {
       const { event_id, employee_id } = req.params;
       
@@ -46,17 +40,11 @@ class AssignmentController {
         data: assignment
       });
     } catch (error) {
-      const status = error.statusCode || error.status || 500;
-      res.status(status).json({
-        success: false,
-        message: error.message || 'Failed to update assignment',
-        details: error.details || error.errors || undefined,
-        timestamp: error.timestamp || undefined
-      });
+      return next(error);
     }
   }
 
-  async deleteAssignment(req, res) {
+  async deleteAssignment(req, res, next) {
     try {
       const { event_id, employee_id } = req.params;
       
@@ -71,13 +59,7 @@ class AssignmentController {
         message: result.message
       });
     } catch (error) {
-      const status = error.statusCode || error.status || 500;
-      res.status(status).json({
-        success: false,
-        message: error.message || 'Failed to delete assignment',
-        details: error.details || undefined,
-        timestamp: error.timestamp || undefined
-      });
+      return next(error);
     }
   }
 }

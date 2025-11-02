@@ -393,57 +393,53 @@ class EventService {
 
     // Otherwise expect an object with employee field and create + link assignment
     if (!assignmentData || !assignmentData.employee) {
-      throw {
-        status: 400,
-        message: 'Employee id is required for assignment'
-      };
+      throw new BadRequestException('Employee id is required for assignment');
     }
 
     // Ensure event exists
     const event = await eventRepository.findById(eventId);
     if (!event) {
-      throw {
-        status: 404,
-        message: 'Event not found'
-      };
+      throw new NotFoundException('Event not found');
     }
 
     // Prevent duplicate assignment for same employee/event
     const exists = await assignmentRepository.exists(eventId, assignmentData.employee);
     if (exists) {
-      throw {
-        status: 409,
-        message: 'Assignment for this employee already exists on the event'
-      };
+      throw new ConflictException('Assignment for this employee already exists on the event');
     }
 
-    // Create assignment
-    const newAssignment = await assignmentRepository.create({
-      event: eventId,
-      employee: assignmentData.employee,
-      amount_paid: assignmentData.amount_paid || 0
-    });
+    // Use a transaction: create assignment and link to event atomically
+    const session = await mongoose.startSession();
+    try {
+      session.startTransaction();
 
-    if (!newAssignment) {
-      throw {
-        status: 500,
-        message: 'Failed to create assignment'
-      };
+      const newAssignment = await assignmentRepository.create({
+        event: eventId,
+        employee: assignmentData.employee,
+        amount_paid: assignmentData.amount_paid || 0
+      }, { session });
+
+      if (!newAssignment) {
+        throw new InternalServerExcepcion('Failed to create assignment');
+      }
+
+      const updatedEvent = await eventRepository.addAssignment(eventId, newAssignment._id, { session });
+      if (!updatedEvent) {
+        throw new InternalServerExcepcion('Failed to link assignment to event');
+      }
+
+      await session.commitTransaction();
+      session.endSession();
+
+      // Return the created assignment (populated employee if needed)
+      return assignmentRepository.findById(newAssignment._id, { populate: ['employee'] });
+    } catch (err) {
+      await session.abortTransaction().catch(() => {});
+      session.endSession();
+      // Rethrow known Exception instances, otherwise wrap
+      if (err && err.statusCode) throw err;
+      throw new InternalServerExcepcion(err && err.message ? err.message : 'Failed to add assignment');
     }
-
-    // Link assignment to event
-    const updatedEvent = await eventRepository.addAssignment(eventId, newAssignment._id);
-    if (!updatedEvent) {
-      // attempt rollback: delete assignment
-      await assignmentRepository.deleteById(newAssignment._id).catch(() => {});
-      throw {
-        status: 500,
-        message: 'Failed to link assignment to event'
-      };
-    }
-
-    // Return the created assignment (populated employee if needed)
-    return assignmentRepository.findById(newAssignment._id, { populate: ['employee'] });
   }
 
   async removeAssignment(eventId, assignmentId, userId) {
@@ -468,21 +464,30 @@ class EventService {
       throw new BadRequestException('Assignment does not belong to the specified event');
     }
 
-    // Remove assignment reference from event
-    const updatedEvent = await eventRepository.removeAssignment(eventId, assignmentId);
-    if (!updatedEvent) {
-      throw new InternalServerExcepcion('Failed to remove assignment from event');
-    }
+    // Use a transaction to remove reference and delete assignment atomically
+    const session = await mongoose.startSession();
+    try {
+      session.startTransaction();
 
-    // Delete the assignment document
-    const deleted = await assignmentRepository.deleteById(assignmentId);
-    if (!deleted) {
-      // Attempt rollback: re-add assignment reference
-      await eventRepository.addAssignment(eventId, assignmentId).catch(() => {});
-      throw new InternalServerExcepcion('Failed to delete assignment');
-    }
+      const updatedEvent = await eventRepository.removeAssignment(eventId, assignmentId, { session });
+      if (!updatedEvent) {
+        throw new InternalServerExcepcion('Failed to remove assignment from event');
+      }
 
-    return updatedEvent;
+      const deleted = await assignmentRepository.deleteById(assignmentId, { session });
+      if (!deleted) {
+        throw new InternalServerExcepcion('Failed to delete assignment');
+      }
+
+      await session.commitTransaction();
+      session.endSession();
+      return updatedEvent;
+    } catch (err) {
+      await session.abortTransaction().catch(() => {});
+      session.endSession();
+      if (err && err.statusCode) throw err;
+      throw new InternalServerExcepcion(err && err.message ? err.message : 'Failed to remove assignment');
+    }
   }
 }
 

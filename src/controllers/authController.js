@@ -2,7 +2,7 @@ const authService = require('../services/authService');
 
 class AuthController {
 
-  async register(req, res) {
+  async register(req, res, next) {
     try {
       const result = await authService.register(req.body);
 
@@ -12,17 +12,11 @@ class AuthController {
         data: result
       });
     } catch (error) {
-      const status = error.statusCode || error.status || 500;
-      res.status(status).json({
-        success: false,
-        message: error.message || 'Registration failed',
-        details: error.details || error.errors || undefined,
-        timestamp: error.timestamp || undefined
-      });
+      return next(error);
     }
   }
 
-  async login(req, res) {
+  async login(req, res, next) {
     try {
       const result = await authService.login(req.body);
 
@@ -32,17 +26,11 @@ class AuthController {
         data: result
       });
     } catch (error) {
-      const status = error.statusCode || error.status || 500;
-      res.status(status).json({
-        success: false,
-        message: error.message || 'Login failed',
-        details: error.details || error.errors || undefined,
-        timestamp: error.timestamp || undefined
-      });
+      return next(error);
     }
   }
 
-  async verifyToken(req, res) {
+  async verifyToken(req, res, next) {
     try {
       const token = req.headers.authorization?.replace('Bearer ', '');
       
@@ -60,13 +48,7 @@ class AuthController {
         data: { user: authService.sanitizeUser(user) }
       });
     } catch (error) {
-      const status = error.statusCode || error.status || 500;
-      res.status(status).json({
-        success: false,
-        message: error.message || 'Token verification failed',
-        details: error.details || undefined,
-        timestamp: error.timestamp || undefined
-      });
+      return next(error);
     }
   }
 }
