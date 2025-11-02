@@ -3,6 +3,10 @@ const mongoose = require('mongoose');
 const assignmentRepository = require('../repositories/AssignmentRepository');
 const employeeService = require('./employeeService');
 const eventService = require('./eventService');
+const BadRequestException = require('../exceptions/BadRequestException');
+const NotFoundException = require('../exceptions/NotFoundException');
+const ConflictException = require('../exceptions/ConflictException');
+const InternalServerExcepcion = require('../exceptions/InternalServerExcepcion');
 
 class AssignmentService {
   // ============ VALIDATION METHODS ============
@@ -52,56 +56,37 @@ class AssignmentService {
   async createAssignment(eventId, employeeId, assignmentData, userId) {
     // Validate ObjectIds
     if (!mongoose.Types.ObjectId.isValid(eventId)) {
-      throw {
-        status: 400,
-        message: 'Invalid event ID'
-      };
+      throw new BadRequestException('Invalid event ID');
     }
 
     if (!mongoose.Types.ObjectId.isValid(employeeId)) {
-      throw {
-        status: 400,
-        message: 'Invalid employee ID'
-      };
+      throw new BadRequestException('Invalid employee ID');
     }
 
     // Validate input data
     const validation = this.validateCreateAssignment(assignmentData);
     if (!validation.isValid) {
-      throw {
-        status: 400,
-        message: 'Validation failed',
-        errors: validation.errors
-      };
+      throw new BadRequestException('Validation failed', validation.errors);
     }
 
     // Check if event exists using EventService
     try {
       await eventService.getEvent(eventId, userId);
     } catch (error) {
-      throw {
-        status: 404,
-        message: 'Event not found'
-      };
+      throw new NotFoundException('Event not found');
     }
 
     // Check if employee exists using EmployeeService
     try {
       await employeeService.getEmployee(employeeId, userId);
     } catch (error) {
-      throw {
-        status: 404,
-        message: 'Employee not found'
-      };
+      throw new NotFoundException('Employee not found');
     }
 
     // Check if assignment already exists
     const existingAssignment = await assignmentRepository.exists(eventId, employeeId);
     if (existingAssignment) {
-      throw {
-        status: 409,
-        message: 'Assignment already exists for this event and employee'
-      };
+      throw new ConflictException('Assignment already exists for this event and employee');
     }
 
     // Create assignment
@@ -125,56 +110,37 @@ class AssignmentService {
   async updateAssignment(eventId, employeeId, updateData, userId) {
     // Validate ObjectIds
     if (!mongoose.Types.ObjectId.isValid(eventId)) {
-      throw {
-        status: 400,
-        message: 'Invalid event ID'
-      };
+      throw new BadRequestException('Invalid event ID');
     }
 
     if (!mongoose.Types.ObjectId.isValid(employeeId)) {
-      throw {
-        status: 400,
-        message: 'Invalid employee ID'
-      };
+      throw new BadRequestException('Invalid employee ID');
     }
 
     // Validate input data
     const validation = this.validateUpdateAssignment(updateData);
     if (!validation.isValid) {
-      throw {
-        status: 400,
-        message: 'Validation failed',
-        errors: validation.errors
-      };
+      throw new BadRequestException('Validation failed', validation.errors);
     }
 
     // Verify event exists using EventService
     try {
       await eventService.getEvent(eventId, userId);
     } catch (error) {
-      throw {
-        status: 404,
-        message: 'Event not found'
-      };
+      throw new NotFoundException('Event not found');
     }
 
     // Verify employee exists using EmployeeService
     try {
       await employeeService.getEmployee(employeeId, userId);
     } catch (error) {
-      throw {
-        status: 404,
-        message: 'Employee not found'
-      };
+      throw new NotFoundException('Employee not found');
     }
 
     // Check if assignment exists
     const assignment = await assignmentRepository.findByEventAndEmployee(eventId, employeeId);
     if (!assignment) {
-      throw {
-        status: 404,
-        message: 'Assignment not found'
-      };
+      throw new NotFoundException('Assignment not found');
     }
 
     // Prepare update object
@@ -191,10 +157,7 @@ class AssignmentService {
     );
 
     if (!updatedAssignment) {
-      throw {
-        status: 500,
-        message: 'Failed to update assignment'
-      };
+      throw new InternalServerExcepcion('Failed to update assignment');
     }
 
     // Return with populated data
@@ -210,10 +173,7 @@ class AssignmentService {
   async deleteAssignment(eventId, employeeId, userId) {
     // Validate ObjectIds
     if (!mongoose.Types.ObjectId.isValid(eventId)) {
-      throw {
-        status: 400,
-        message: 'Invalid event ID'
-      };
+      throw new BadRequestException('Invalid event ID');
     }
 
     if (!mongoose.Types.ObjectId.isValid(employeeId)) {
@@ -227,20 +187,14 @@ class AssignmentService {
     try {
       await eventService.getEvent(eventId, userId);
     } catch (error) {
-      throw {
-        status: 404,
-        message: 'Event not found'
-      };
+      throw new NotFoundException('Event not found');
     }
 
     // Verify employee exists using EmployeeService
     try {
       await employeeService.getEmployee(employeeId, userId);
     } catch (error) {
-      throw {
-        status: 404,
-        message: 'Employee not found'
-      };
+      throw new NotFoundException('Employee not found');
     }
 
     // Check if assignment exists
@@ -288,20 +242,14 @@ class AssignmentService {
 
   async getAssignmentsByEmployee(employeeId, userId) {
     if (!mongoose.Types.ObjectId.isValid(employeeId)) {
-      throw {
-        status: 400,
-        message: 'Invalid employee ID'
-      };
+      throw new BadRequestException('Invalid employee ID');
     }
 
     // Verify employee exists using EmployeeService
     try {
       await employeeService.getEmployee(employeeId, userId);
     } catch (error) {
-      throw {
-        status: 404,
-        message: 'Employee not found'
-      };
+      throw new NotFoundException('Employee not found');
     }
 
     const assignments = await assignmentRepository.findByEmployee(employeeId, {

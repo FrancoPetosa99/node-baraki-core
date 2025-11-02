@@ -1,4 +1,3 @@
-// controllers/eventController.js
 const eventService = require('../services/eventService');
 
 class EventController {
@@ -13,11 +12,12 @@ class EventController {
         data: event
       });
     } catch (error) {
-      const status = error.status || 500;
+      const status = error.statusCode || error.status || 500;
       res.status(status).json({
         success: false,
         message: error.message || 'Failed to create event',
-        errors: error.errors || undefined
+        details: error.details || error.errors || undefined,
+        timestamp: error.timestamp || undefined
       });
     }
   }
@@ -31,10 +31,12 @@ class EventController {
         data: result
       });
     } catch (error) {
-      const status = error.status || 500;
+      const status = error.statusCode || error.status || 500;
       res.status(status).json({
         success: false,
-        message: error.message || 'Failed to search events'
+        message: error.message || 'Failed to search events',
+        details: error.details || undefined,
+        timestamp: error.timestamp || undefined
       });
     }
   }
@@ -48,10 +50,12 @@ class EventController {
         data: event
       });
     } catch (error) {
-      const status = error.status || 500;
+      const status = error.statusCode || error.status || 500;
       res.status(status).json({
         success: false,
-        message: error.message || 'Failed to get event'
+        message: error.message || 'Failed to get event',
+        details: error.details || undefined,
+        timestamp: error.timestamp || undefined
       });
     }
   }
@@ -70,11 +74,12 @@ class EventController {
         data: event
       });
     } catch (error) {
-      const status = error.status || 500;
+      const status = error.statusCode || error.status || 500;
       res.status(status).json({
         success: false,
         message: error.message || 'Failed to update event',
-        errors: error.errors || undefined
+        details: error.details || error.errors || undefined,
+        timestamp: error.timestamp || undefined
       });
     }
   }
@@ -88,10 +93,12 @@ class EventController {
         message: result.message
       });
     } catch (error) {
-      const status = error.status || 500;
+      const status = error.statusCode || error.status || 500;
       res.status(status).json({
         success: false,
-        message: error.message || 'Failed to delete event'
+        message: error.message || 'Failed to delete event',
+        details: error.details || undefined,
+        timestamp: error.timestamp || undefined
       });
     }
   }
@@ -110,11 +117,12 @@ class EventController {
         data: event
       });
     } catch (error) {
-      const status = error.status || 500;
+      const status = error.statusCode || error.status || 500;
       res.status(status).json({
         success: false,
         message: error.message || 'Failed to add guest',
-        errors: error.errors || undefined
+        details: error.details || error.errors || undefined,
+        timestamp: error.timestamp || undefined
       });
     }
   }
@@ -128,10 +136,12 @@ class EventController {
         data: guests
       });
     } catch (error) {
-      const status = error.status || 500;
+      const status = error.statusCode || error.status || 500;
       res.status(status).json({
         success: false,
-        message: error.message || 'Failed to get guests'
+        message: error.message || 'Failed to get guests',
+        details: error.details || undefined,
+        timestamp: error.timestamp || undefined
       });
     }
   }
@@ -149,10 +159,12 @@ class EventController {
         message: result.message
       });
     } catch (error) {
-      const status = error.status || 500;
+      const status = error.statusCode || error.status || 500;
       res.status(status).json({
         success: false,
-        message: error.message || 'Failed to remove guest'
+        message: error.message || 'Failed to remove guest',
+        details: error.details || undefined,
+        timestamp: error.timestamp || undefined
       });
     }
   }
@@ -169,10 +181,12 @@ class EventController {
         data: employees
       });
     } catch (error) {
-      const status = error.status || 500;
+      const status = error.statusCode || error.status || 500;
       res.status(status).json({
         success: false,
-        message: error.message || 'Failed to get event employees'
+        message: error.message || 'Failed to get event employees',
+        details: error.details || undefined,
+        timestamp: error.timestamp || undefined
       });
     }
   }
@@ -189,10 +203,12 @@ class EventController {
         data: invitation
       });
     } catch (error) {
-      const status = error.status || 500;
+      const status = error.statusCode || error.status || 500;
       res.status(status).json({
         success: false,
-        message: error.message || 'Failed to get invitation'
+        message: error.message || 'Failed to get invitation',
+        details: error.details || undefined,
+        timestamp: error.timestamp || undefined
       });
     }
   }

@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const eventRepository = require('../repositories/EventRepository');
 const assignmentRepository = require('../repositories/AssignmentRepository');
+const BadRequestException = require('../exceptions/BadRequestException');
+const NotFoundException = require('../exceptions/NotFoundException');
+const ConflictException = require('../exceptions/ConflictException');
+const InternalServerExcepcion = require('../exceptions/InternalServerExcepcion');
 
 class EventService {
   // ============ VALIDATTION METHODS ============
@@ -115,12 +119,8 @@ class EventService {
   // ============ BUSINESS LOGIC METHODS ============
   async createEvent(eventData, userId) {
     const validation = this.validateCreateEvent(eventData);
-    if (!validation.isValid) {
-      throw {
-        status: 400,
-        message: 'Validation failed',
-        errors: validation.errors
-      };
+      if (!validation.isValid) {
+        throw new BadRequestException('Validation failed', validation.errors);
     }
 
     const event = await eventRepository.create({
@@ -139,11 +139,8 @@ class EventService {
       populate: ['assignments']
     });
 
-    if (!event) {
-      throw {
-        status: 404,
-        message: 'Event not found'
-      };
+      if (!event) {
+        throw new NotFoundException('Event not found');
     }
 
     return event;
@@ -211,11 +208,8 @@ class EventService {
   async updateEvent(eventId, updateData, userId) {
     const event = await eventRepository.findById(eventId);
 
-    if (!event) {
-      throw {
-        status: 404,
-        message: 'Event not found'
-      };
+      if (!event) {
+        throw new NotFoundException('Event not found');
     }
 
     // Validate update data if provided
@@ -231,23 +225,16 @@ class EventService {
       };
 
       const validation = this.validateCreateEvent(dataToValidate);
-      if (!validation.isValid) {
-        throw {
-          status: 400,
-          message: 'Validation failed',
-          errors: validation.errors
-        };
+          if (!validation.isValid) {
+            throw new BadRequestException('Validation failed', validation.errors);
       }
     }
 
     // Update event using repository
     const updatedEvent = await eventRepository.updateById(eventId, updateData);
 
-    if (!updatedEvent) {
-      throw {
-        status: 500,
-        message: 'Failed to update event'
-      };
+      if (!updatedEvent) {
+        throw new InternalServerExcepcion('Failed to update event');
     }
 
     return updatedEvent;
@@ -279,11 +266,7 @@ class EventService {
   async addGuest(eventId, guestData, userId) {
     const validation = this.validateGuest(guestData);
     if (!validation.isValid) {
-      throw {
-        status: 400,
-        message: 'Validation failed',
-        errors: validation.errors
-      };
+        throw new BadRequestException('Validation failed', validation.errors);
     }
 
     const guest = {
@@ -295,11 +278,8 @@ class EventService {
 
     const updatedEvent = await eventRepository.addGuest(eventId, guest);
 
-    if (!updatedEvent) {
-      throw {
-        status: 404,
-        message: 'Event not found'
-      };
+      if (!updatedEvent) {
+        throw new NotFoundException('Event not found');
     }
 
     // Check if guest was actually added (not duplicate)
@@ -308,11 +288,8 @@ class EventService {
       g => g.email === guest.email
     );
 
-    if (!guestExists) {
-      throw {
-        status: 409,
-        message: 'Guest with this email already exists'
-      };
+      if (!guestExists) {
+        throw new ConflictException('Guest with this email already exists');
     }
 
     return updatedEvent;
@@ -321,11 +298,8 @@ class EventService {
   async getEventGuests(eventId, userId) {
     const guests = await eventRepository.getGuests(eventId);
 
-    if (guests === null) {
-      throw {
-        status: 404,
-        message: 'Event not found'
-      };
+      if (guests === null) {
+        throw new NotFoundException('Event not found');
     }
 
     return guests;
@@ -334,11 +308,8 @@ class EventService {
   async removeGuest(eventId, guestId, userId) {
     const updatedEvent = await eventRepository.removeGuest(eventId, guestId);
 
-    if (!updatedEvent) {
-      throw {
-        status: 404,
-        message: 'Event or guest not found'
-      };
+      if (!updatedEvent) {
+        throw new NotFoundException('Event or guest not found');
     }
 
     return { message: 'Guest removed successfully' };
@@ -378,11 +349,8 @@ class EventService {
   async getEventInvitation(eventId, userId) {
     const invitation = await eventRepository.getInvitation(eventId);
 
-    if (invitation === null) {
-      throw {
-        status: 404,
-        message: 'Event not found'
-      };
+      if (invitation === null) {
+        throw new NotFoundException('Event not found');
     }
 
     // Get event details
@@ -479,81 +447,39 @@ class EventService {
   }
 
   async removeAssignment(eventId, assignmentId, userId) {
-    // Validate ids
-    if (!mongoose.Types.ObjectId.isValid(eventId) || !mongoose.Types.ObjectId.isValid(assignmentId)) {
-      throw {
-        status: 400,
-        message: 'Invalid event or assignment id'
-      };
-    }
-
-    const event = await eventRepository.findById(eventId);
-    if (!event) {
-      throw {
-        status: 404,
-        message: 'Event not found'
-      };
-    }
-
-    const updatedEvent = await eventRepository.removeAssignment(eventId, assignmentId);
-    if (!updatedEvent) {
-      throw {
-        status: 500,
-        message: 'Failed to remove assignment from event'
-      };
-    }
-
-    return updatedEvent;
-  }
-
-  async removeAssignment(eventId, assignmentId, userId) {
     // Validate IDs
-    if (!mongoose.Types.ObjectId.isValid(eventId)) {
-      throw {
-        status: 400,
-        message: 'Invalid event ID'
-      };
-    }
-
-    if (!mongoose.Types.ObjectId.isValid(assignmentId)) {
-      throw {
-        status: 400,
-        message: 'Invalid assignment ID'
-      };
+    if (!mongoose.Types.ObjectId.isValid(eventId) || !mongoose.Types.ObjectId.isValid(assignmentId)) {
+      throw new BadRequestException('Invalid event or assignment id');
     }
 
     // Ensure event exists
     const event = await eventRepository.findById(eventId);
     if (!event) {
-      throw {
-        status: 404,
-        message: 'Event not found'
-      };
+      throw new NotFoundException('Event not found');
     }
 
     // Ensure assignment exists and belongs to event
     const assignment = await assignmentRepository.findById(assignmentId);
     if (!assignment) {
-      throw {
-        status: 404,
-        message: 'Assignment not found'
-      };
+      throw new NotFoundException('Assignment not found');
     }
 
     if (!assignment.event || String(assignment.event) !== String(eventId)) {
-      throw {
-        status: 400,
-        message: 'Assignment does not belong to the specified event'
-      };
+      throw new BadRequestException('Assignment does not belong to the specified event');
     }
 
     // Remove assignment reference from event
     const updatedEvent = await eventRepository.removeAssignment(eventId, assignmentId);
     if (!updatedEvent) {
-      throw {
-        status: 500,
-        message: 'Failed to remove assignment from event'
-      };
+      throw new InternalServerExcepcion('Failed to remove assignment from event');
+    }
+
+    // Delete the assignment document
+    const deleted = await assignmentRepository.deleteById(assignmentId);
+    if (!deleted) {
+      // Attempt rollback: re-add assignment reference
+      await eventRepository.addAssignment(eventId, assignmentId).catch(() => {});
+      throw new InternalServerExcepcion('Failed to delete assignment');
     }
 
     return updatedEvent;

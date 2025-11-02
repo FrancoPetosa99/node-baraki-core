@@ -1,4 +1,3 @@
-// controllers/assignmentController.js
 const assignmentService = require('../services/AssignmentService');
 
 class AssignmentController {
@@ -20,11 +19,12 @@ class AssignmentController {
         data: assignment
       });
     } catch (error) {
-      const status = error.status || 500;
+      const status = error.statusCode || error.status || 500;
       res.status(status).json({
         success: false,
         message: error.message || 'Failed to create assignment',
-        errors: error.errors || undefined
+        details: error.details || error.errors || undefined,
+        timestamp: error.timestamp || undefined
       });
     }
   }
@@ -46,11 +46,12 @@ class AssignmentController {
         data: assignment
       });
     } catch (error) {
-      const status = error.status || 500;
+      const status = error.statusCode || error.status || 500;
       res.status(status).json({
         success: false,
         message: error.message || 'Failed to update assignment',
-        errors: error.errors || undefined
+        details: error.details || error.errors || undefined,
+        timestamp: error.timestamp || undefined
       });
     }
   }
@@ -70,10 +71,12 @@ class AssignmentController {
         message: result.message
       });
     } catch (error) {
-      const status = error.status || 500;
+      const status = error.statusCode || error.status || 500;
       res.status(status).json({
         success: false,
-        message: error.message || 'Failed to delete assignment'
+        message: error.message || 'Failed to delete assignment',
+        details: error.details || undefined,
+        timestamp: error.timestamp || undefined
       });
     }
   }

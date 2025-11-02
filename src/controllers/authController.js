@@ -1,7 +1,7 @@
-// controllers/AuthController.js
 const authService = require('../services/authService');
 
 class AuthController {
+
   async register(req, res) {
     try {
       const result = await authService.register(req.body);
@@ -12,11 +12,12 @@ class AuthController {
         data: result
       });
     } catch (error) {
-      const status = error.status || 500;
+      const status = error.statusCode || error.status || 500;
       res.status(status).json({
         success: false,
         message: error.message || 'Registration failed',
-        errors: error.errors || undefined
+        details: error.details || error.errors || undefined,
+        timestamp: error.timestamp || undefined
       });
     }
   }
@@ -31,11 +32,12 @@ class AuthController {
         data: result
       });
     } catch (error) {
-      const status = error.status || 500;
+      const status = error.statusCode || error.status || 500;
       res.status(status).json({
         success: false,
         message: error.message || 'Login failed',
-        errors: error.errors || undefined
+        details: error.details || error.errors || undefined,
+        timestamp: error.timestamp || undefined
       });
     }
   }
@@ -58,10 +60,12 @@ class AuthController {
         data: { user: authService.sanitizeUser(user) }
       });
     } catch (error) {
-      const status = error.status || 500;
+      const status = error.statusCode || error.status || 500;
       res.status(status).json({
         success: false,
-        message: error.message || 'Token verification failed'
+        message: error.message || 'Token verification failed',
+        details: error.details || undefined,
+        timestamp: error.timestamp || undefined
       });
     }
   }

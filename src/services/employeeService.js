@@ -2,6 +2,10 @@
 const mongoose = require('mongoose');
 const employeeRepository = require('../repositories/EmployeeRepository');
 const assignmentRepository = require('../repositories/AssignmentRepository');
+const BadRequestException = require('../exceptions/BadRequestException');
+const NotFoundException = require('../exceptions/NotFoundException');
+const ConflictException = require('../exceptions/ConflictException');
+const InternalServerExcepcion = require('../exceptions/InternalServerExcepcion');
 
 class EmployeeService {
   // ============ VALIDATION METHODS ============
@@ -84,20 +88,13 @@ class EmployeeService {
     // Validate input
     const validation = this.validateCreateEmployee(employeeData);
     if (!validation.isValid) {
-      throw {
-        status: 400,
-        message: 'Validation failed',
-        errors: validation.errors
-      };
+      throw new BadRequestException('Validation failed', validation.errors);
     }
 
     // Check if phone already exists
     const phoneExists = await employeeRepository.existsByPhone(employeeData.phone);
     if (phoneExists) {
-      throw {
-        status: 409,
-        message: 'Employee with this phone number already exists'
-      };
+      throw new ConflictException('Employee with this phone number already exists');
     }
 
     // Create employee
@@ -115,10 +112,7 @@ class EmployeeService {
     const employee = await employeeRepository.findById(employeeId);
 
     if (!employee) {
-      throw {
-        status: 404,
-        message: 'Employee not found'
-      };
+      throw new NotFoundException('Employee not found');
     }
 
     return employee;
@@ -176,20 +170,13 @@ class EmployeeService {
     const employee = await employeeRepository.findById(employeeId);
 
     if (!employee) {
-      throw {
-        status: 404,
-        message: 'Employee not found'
-      };
+      throw new NotFoundException('Employee not found');
     }
 
     // Validate update data
     const validation = this.validateUpdateEmployee(updateData);
     if (!validation.isValid) {
-      throw {
-        status: 400,
-        message: 'Validation failed',
-        errors: validation.errors
-      };
+      throw new BadRequestException('Validation failed', validation.errors);
     }
 
     // Check if phone is being changed and if it already exists
@@ -199,10 +186,7 @@ class EmployeeService {
         employeeId
       );
       if (phoneExists) {
-        throw {
-          status: 409,
-          message: 'Phone number already in use by another employee'
-        };
+        throw new ConflictException('Phone number already in use by another employee');
       }
     }
 
@@ -222,10 +206,7 @@ class EmployeeService {
     const updatedEmployee = await employeeRepository.updateById(employeeId, update);
 
     if (!updatedEmployee) {
-      throw {
-        status: 500,
-        message: 'Failed to update employee'
-      };
+      throw new InternalServerExcepcion('Failed to update employee');
     }
 
     return updatedEmployee;
@@ -235,10 +216,7 @@ class EmployeeService {
     const employee = await employeeRepository.findById(employeeId);
 
     if (!employee) {
-      throw {
-        status: 404,
-        message: 'Employee not found'
-      };
+      throw new NotFoundException('Employee not found');
     }
 
     // Delete associated assignments

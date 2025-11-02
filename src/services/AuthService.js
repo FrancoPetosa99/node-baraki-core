@@ -1,9 +1,12 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const userRepository = require('../repositories/userRepository');
+const BadRequestException = require('../exceptions/BadRequestException');
+const NotFoundException = require('../exceptions/NotFoundException');
+const ConflictException = require('../exceptions/ConflictException');
 
 class AuthService {
-  // Validation methods
+
   validateRegisterInput(data) {
     const errors = [];
     const { first_name, last_name, email, password } = data;
@@ -13,6 +16,10 @@ class AuthService {
     }
     if (first_name && first_name.length > 20) {
       errors.push('First name must not exceed 20 characters');
+    }
+
+    if (!last_name || last_name.trim().length === 0) {
+      errors.push('Last name is required');
     }
 
     if (last_name && last_name.length > 20) {
@@ -68,27 +75,19 @@ class AuthService {
     return emailRegex.test(email);
   }
 
-  // Business logic methods
   async register(userData) {
     const { first_name, last_name, email, password } = userData;
 
     // Validate input
     const validation = this.validateRegisterInput(userData);
     if (!validation.isValid) {
-      throw {
-        status: 400,
-        message: 'Validation failed',
-        errors: validation.errors
-      };
+      throw new BadRequestException('Validation failed', validation.errors);
     }
 
       // Check if user already exists
       const existingUser = await userRepository.findByEmail(email.toLowerCase());
     if (existingUser) {
-      throw {
-        status: 409,
-        message: 'User with this email already exists'
-      };
+      throw new ConflictException('User with this email already exists');
     }
 
     // Hash password
@@ -117,37 +116,24 @@ class AuthService {
     // Validate input
     const validation = this.validateLoginInput(credentials);
     if (!validation.isValid) {
-      throw {
-        status: 400,
-        message: 'Validation failed',
-        errors: validation.errors
-      };
+      throw new BadRequestException('Validation failed', validation.errors);
     }
 
     // Find user
     const user = await userRepository.findByEmail(email.toLowerCase());
     if (!user) {
-      throw {
-        status: 401,
-        message: 'Invalid email or password'
-      };
+      throw new BadRequestException('Invalid email or password');
     }
 
     // Check if password exists (for OAuth users)
     if (!user.password) {
-      throw {
-        status: 401,
-        message: 'Please use social login for this account'
-      };
+      throw new BadRequestException('Please use social login for this account');
     }
 
     // Verify password
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
-      throw {
-        status: 401,
-        message: 'Invalid email or password'
-      };
+      throw new BadRequestException('Invalid email or password');
     }
 
     // Generate token
@@ -187,25 +173,16 @@ class AuthService {
     const user = await userRepository.findById(decoded.id);
       
       if (!user) {
-        throw {
-          status: 401,
-          message: 'User not found'
-        };
+        throw new NotFoundException('User not found');
       }
 
       return user;
     } catch (error) {
       if (error.name === 'JsonWebTokenError') {
-        throw {
-          status: 401,
-          message: 'Invalid token'
-        };
+        throw new BadRequestException('Invalid token');
       }
       if (error.name === 'TokenExpiredError') {
-        throw {
-          status: 401,
-          message: 'Token expired'
-        };
+        throw new BadRequestException('Token expired');
       }
       throw error;
     }

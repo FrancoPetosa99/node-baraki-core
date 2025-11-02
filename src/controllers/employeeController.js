@@ -12,11 +12,12 @@ class EmployeeController {
         data: employee
       });
     } catch (error) {
-      const status = error.status || 500;
+      const status = error.statusCode || error.status || 500;
       res.status(status).json({
         success: false,
         message: error.message || 'Failed to create employee',
-        errors: error.errors || undefined
+        details: error.details || error.errors || undefined,
+        timestamp: error.timestamp || undefined
       });
     }
   }
@@ -30,10 +31,12 @@ class EmployeeController {
         data: result
       });
     } catch (error) {
-      const status = error.status || 500;
+      const status = error.statusCode || error.status || 500;
       res.status(status).json({
         success: false,
-        message: error.message || 'Failed to get employees'
+        message: error.message || 'Failed to get employees',
+        details: error.details || undefined,
+        timestamp: error.timestamp || undefined
       });
     }
   }
@@ -47,10 +50,12 @@ class EmployeeController {
         data: employee
       });
     } catch (error) {
-      const status = error.status || 500;
+      const status = error.statusCode || error.status || 500;
       res.status(status).json({
         success: false,
-        message: error.message || 'Failed to get employee'
+        message: error.message || 'Failed to get employee',
+        details: error.details || undefined,
+        timestamp: error.timestamp || undefined
       });
     }
   }
@@ -64,10 +69,12 @@ class EmployeeController {
         data: events
       });
     } catch (error) {
-      const status = error.status || 500;
+      const status = error.statusCode || error.status || 500;
       res.status(status).json({
         success: false,
-        message: error.message || 'Failed to get employee events'
+        message: error.message || 'Failed to get employee events',
+        details: error.details || undefined,
+        timestamp: error.timestamp || undefined
       });
     }
   }
@@ -86,11 +93,12 @@ class EmployeeController {
         data: employee
       });
     } catch (error) {
-      const status = error.status || 500;
+      const status = error.statusCode || error.status || 500;
       res.status(status).json({
         success: false,
         message: error.message || 'Failed to update employee',
-        errors: error.errors || undefined
+        details: error.details || error.errors || undefined,
+        timestamp: error.timestamp || undefined
       });
     }
   }
@@ -104,10 +112,12 @@ class EmployeeController {
         message: result.message
       });
     } catch (error) {
-      const status = error.status || 500;
+      const status = error.statusCode || error.status || 500;
       res.status(status).json({
         success: false,
-        message: error.message || 'Failed to delete employee'
+        message: error.message || 'Failed to delete employee',
+        details: error.details || undefined,
+        timestamp: error.timestamp || undefined
       });
     }
   }
