@@ -1,7 +1,6 @@
-const assignmentService = require('../services/AssignmentService');
+const assignmentService = require('../services/assignmentService');
 
 class AssignmentController {
-
   async createAssignment(req, res, next) {
     try {
       const { event_id, employee_id } = req.params;

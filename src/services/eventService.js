@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
-const eventRepository = require('../repositories/EventRepository');
-const assignmentRepository = require('../repositories/AssignmentRepository');
 const BadRequestException = require('../exceptions/BadRequestException');
 const NotFoundException = require('../exceptions/NotFoundException');
 const ConflictException = require('../exceptions/ConflictException');
 const InternalServerExcepcion = require('../exceptions/InternalServerExcepcion');
+const eventRepository = require('../repositories/eventRepository');
+const assignmentRepository = require('../repositories/assignmentRepository');
 
 class EventService {
   // ============ VALIDATTION METHODS ============

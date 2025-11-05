@@ -1,10 +1,10 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const userRepository = require('../repositories/userRepository');
 const BadRequestException = require('../exceptions/BadRequestException');
 const NotFoundException = require('../exceptions/NotFoundException');
 const ConflictException = require('../exceptions/ConflictException');
 const ForbiddenException = require('../exceptions/ForbiddenException');
+const userRepository = require('../repositories/userRepository');
 const config = require("../config")
 
 class AuthService {

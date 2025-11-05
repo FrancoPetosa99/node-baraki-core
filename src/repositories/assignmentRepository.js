@@ -1,4 +1,3 @@
-// repositories/AssignmentRepository.js
 const mongoose = require('mongoose');
 const Assignment = require('../models/assignment');
 

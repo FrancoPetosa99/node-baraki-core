@@ -1,7 +1,6 @@
 const eventService = require('../services/eventService');
 
 class EventController {
-
   async createEvent(req, res, next) {
     try {
       const event = await eventService.createEvent(req.body, req.user._id);
