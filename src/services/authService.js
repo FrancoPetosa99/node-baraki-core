@@ -85,19 +85,19 @@ class AuthService {
       throw new BadRequestException('Validation failed', validation.errors);
     }
 
-      // Check if user already exists
-      const existingUser = await userRepository.findByEmail(email.toLowerCase());
+    // Check if user already exists
+    const existingUser = await userRepository.findByEmail(email.toLowerCase());
     if (existingUser) {
       throw new ConflictException('User with this email already exists');
     }
 
-
-      // Create user
-      const user = await userRepository.create({
+    const hashedPassword = await bcrypt.hash(password, 10);
+    // Create user
+    const user = await userRepository.create({
         first_name: first_name.trim(),
         last_name: last_name ? last_name.trim() : undefined,
         email: email.toLowerCase().trim(),
-        password: password
+        password: hashedPassword
       });
 
     // Generate token
