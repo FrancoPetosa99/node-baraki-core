@@ -97,7 +97,7 @@ class AuthService {
         first_name: first_name.trim(),
         last_name: last_name ? last_name.trim() : undefined,
         email: email.toLowerCase().trim(),
-        password: hashedPassword
+        password: password
       });
 
     // Generate token
