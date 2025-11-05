@@ -1,3 +1,4 @@
+// models/event.js
 const mongoose = require('mongoose');
 
 const EventStatus = {
@@ -37,10 +38,10 @@ const guestSchema = new mongoose.Schema({
         maxlength: 20,
     },
     email: {
-        type: Number,
+        type: String,  
         required: true
     },
-    assit: {
+    assist: {
         type: Boolean,
         default: false
     }
@@ -72,11 +73,11 @@ const invitationSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true,
-        maxlength: 20,
+        maxlength: 100,  // FIXED: Increased from 20 to 100
     },
     image_url: {
         type: String,
-        maxlength: 20,
+        maxlength: 500,  // FIXED: Increased from 20 to 500 for URLs
     }
 });
 
@@ -117,7 +118,7 @@ const eventSchema = new mongoose.Schema({
         required: true
     },
     confirmed_guests: {
-        type: guestSchema,
+        type: [guestSchema],  
         default: []
     }
 }, {

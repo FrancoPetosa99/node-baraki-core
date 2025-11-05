@@ -1,42 +1,56 @@
-const BadRequestException = require('../exceptions/BadRequestException');
-const InternalServerExcepcion = require('../exceptions/InternalServerExcepcion');
-const authService = require('../services/AuthService'); 
+const authService = require('../services/authService');
 
-class AuthController {    
-    login = async (request, response) => {
-        const { email, password } = request.body;
-        if (!email || !password) 
-            throw new BadRequestException('Email and password required');
-        
-        if (!process.env.JWT_SECRET) 
-            throw new InternalServerExcepcion('JWT secret key missing in current enviorment');
+class AuthController {
 
-        const authToken = await authService.generateAuthToken(email, password);
+  async register(req, res, next) {
+    try {
+      const result = await authService.register(req.body);
 
-        return response
-        .status(200)
-        .json({ 
-            statusCode: 200,
-            message: 'User successfully login',
-            authToken: authToken, 
+      res.status(201).json({
+        success: true,
+        message: 'User registered successfully',
+        data: result
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  async login(req, res, next) {
+    try {
+      const result = await authService.login(req.body);
+
+      res.status(200).json({
+        success: true,
+        message: 'Login successful',
+        data: result
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  async verifyToken(req, res, next) {
+    try {
+      const token = req.headers.authorization?.replace('Bearer ', '');
+      
+      if (!token) {
+        return res.status(401).json({
+          success: false,
+          message: 'No token provided'
         });
-    };
+      }
 
-    register = async (request, response) => {
-        const { email, password } = request.body;
-        if (!email || !password) 
-            throw new BadRequestException('Email and password required');
+      const user = await authService.verifyToken(token);
 
-        const data = { email, password };
-        await authService.registerUser(data);
-        
-        return response
-        .status(201)
-        .json({ 
-            status: 'Success',
-            message: 'User successfully created'
-        });
-    };
+      res.status(200).json({
+        success: true,
+        data: { user: authService.sanitizeUser(user) }
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
 }
 
 module.exports = new AuthController();

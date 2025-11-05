@@ -1,90 +1,157 @@
 const eventService = require('../services/eventService');
 
-class EventsController {    
-    createEvent = async (request, response) => {
-        return response
-        .status(201)
-        .json({ 
-            statusCode: 200,
-            message: 'Event successfully login',
-            data: { user_id }, 
-        });
-    };
+class EventController {
 
-    addGuest = async (request, response) => {
-        return response
-        .status(201)
-        .json({ 
-            statusCode: 200,
-            message: 'Guest successfully added',
-            data: { guest }, 
-        });
-    };
+  async createEvent(req, res, next) {
+    try {
+      const event = await eventService.createEvent(req.body, req.user._id);
 
-    searchEvents = async (request, response) => {
-        return response
-        .status(200)
-        .json({ 
-            status: 'Success',
-            message: 'Events successfully retrieved',
-            data: events
-        });
-    };
+      res.status(201).json({
+        success: true,
+        message: 'Event created successfully',
+        data: event
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
 
-    getEvent = async (request, response) => {
-        return response
-        .status(201)
-        .json({ 
-            status: 'Success',
-            message: 'Event successfully retrieved',
-            data: event
-        });
-    };
+  async searchEvents(req, res, next) {
+    try {
+      const result = await eventService.searchEvents(req.query, req.user._id);
 
-    getEventGuests = async (request, response) => {
-        return response
-        .status(200)
-        .json({ 
-            status: 'Success',
-            message: 'Guests successfully retrieved',
-            data: guests
-        });
-    };
+      res.status(200).json({
+        success: true,
+        data: result
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
 
-    getEventEmployees = async (request, response) => {
-        return response
-        .status(200)
-        .json({ 
-            status: 'Success',
-            message: 'Employees successfully retrieved',
-            data: employees
-        });
-    };
+  async getEvent(req, res, next) {
+    try {
+      const event = await eventService.getEvent(req.params.id, req.user._id);
 
-    getEventInvitation = async (request, response) => {
-        return response
-        .status(200)
-        .json({ 
-            status: 'Success',
-            message: 'Invitation successfully retrieved',
-            data: invitation
-        });
-    };
+      res.status(200).json({
+        success: true,
+        data: event
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
 
-    updateEvent = async (request, response) => {
-        return response
-        .status(204)
-    };
+  async updateEvent(req, res, next) {
+    try {
+      const event = await eventService.updateEvent(
+        req.params.id,
+        req.body,
+        req.user._id
+      );
 
-    deleteEvent = async (request, response) => {
-        return response
-        .status(204)
-    };
+      res.status(200).json({
+        success: true,
+        message: 'Event updated successfully',
+        data: event
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
 
-    removeGuest = async (request, response) => {
-        return response
-        .status(204)
-    };
+  async deleteEvent(req, res, next) {
+    try {
+      const result = await eventService.deleteEvent(req.params.id, req.user._id);
+
+      res.status(200).json({
+        success: true,
+        message: result.message
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  async addGuest(req, res, next) {
+    try {
+      const event = await eventService.addGuest(
+        req.params.id,
+        req.body,
+        req.user._id
+      );
+
+      res.status(201).json({
+        success: true,
+        message: 'Guest added successfully',
+        data: event
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  async getEventGuests(req, res, next) {
+    try {
+      const guests = await eventService.getEventGuests(req.params.id, req.user._id);
+
+      res.status(200).json({
+        success: true,
+        data: guests
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  async removeGuest(req, res, next) {
+    try {
+      const result = await eventService.removeGuest(
+        req.params.event_id,
+        req.params.guest_id,
+        req.user._id
+      );
+
+      res.status(200).json({
+        success: true,
+        message: result.message
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  async getEventEmployees(req, res, next) {
+    try {
+      const employees = await eventService.getEventEmployees(
+        req.params.id,
+        req.user._id
+      );
+
+      res.status(200).json({
+        success: true,
+        data: employees
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  async getEventInvitation(req, res, next) {
+    try {
+      const invitation = await eventService.getEventInvitation(
+        req.params.id,
+        req.user._id
+      );
+
+      res.status(200).json({
+        success: true,
+        data: invitation
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
 }
 
-module.exports = new EventsController();
+module.exports = new EventController();

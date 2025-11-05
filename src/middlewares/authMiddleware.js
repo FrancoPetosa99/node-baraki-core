@@ -1,30 +1,22 @@
-const jwt = require('jsonwebtoken');
+const authService = require('../services/authService');
 
-const authMiddleware = (request, response, next) => {
-    try {
-        const authHeader = request.headers.authorization;
+const authMiddleware = async (req, res, next) => {
+  try {
+    const token = req.headers.authorization?.replace('Bearer ', '');
 
-        let token = null;
-        if (authHeader && authHeader.startsWith('Bearer ')) 
-            token = authHeader.split(' ')[1];
-
-        if (!token) 
-            throw { statusCode: 401, message: 'Authentication required' };
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-        request.user = decoded;
-
-        next();
-
-    } catch (error) {
-        const status = 'Error';
-        const statusCode = error.statusCode || 500;
-        const message = error.message || 'An unexpected error has occurred';
-        return response
-        .status(statusCode)
-        .json({ status, statusCode, message });
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: 'Authentication required'
+      });
     }
+
+    const user = await authService.verifyToken(token);
+    req.user = user;
+    next();
+  } catch (error) {
+    return next(error);
+  }
 };
 
 module.exports = authMiddleware;

@@ -1,55 +1,90 @@
 const employeeService = require('../services/employeeService');
 
-class EmployeeController {    
-    createEmployee = async (request, response) => {
-        return response
-        .status(201)
-        .json({ 
-            statusCode: 201,
-            message: 'Employee successfully login',
-            data: { user_id }, 
-        });
-    };
+class EmployeeController {
 
-    getEmployee = async (request, response) => {
-        return response
-        .status(200)
-        .json({ 
-            status: 'Success',
-            message: 'Employee successfully retrieved',
-            data: events
-        });
-    };
+  async createEmployee(req, res, next) {
+    try {
+      const employee = await employeeService.createEmployee(req.body, req.user._id);
 
-    getEmployees = async (request, response) => {
-        return response
-        .status(200)
-        .json({ 
-            status: 'Success',
-            message: 'Employeess successfully retrieved',
-            data: events
-        });
-    };
-
-    getEmployeeEvents = async (request, response) => {
-        return response
-        .status(200)
-        .json({ 
-            status: 'Success',
-            message: 'Events successfully retrieved',
-            data: events
-        });
-    };
-
-    updateEmployee = async (request, response) => {
-        return response
-        .status(204)
+      res.status(201).json({
+        success: true,
+        message: 'Employee created successfully',
+        data: employee
+      });
+    } catch (error) {
+      return next(error);
     }
+  }
 
-    deleteEmployee = async (request, response) => {
-        return response
-        .status(204)
+  async getEmployees(req, res, next) {
+    try {
+      const result = await employeeService.getEmployees(req.query, req.user._id);
+
+      res.status(200).json({
+        success: true,
+        data: result
+      });
+    } catch (error) {
+      return next(error);
     }
+  }
+
+  async getEmployee(req, res, next) {
+    try {
+      const employee = await employeeService.getEmployee(req.params.id, req.user._id);
+
+      res.status(200).json({
+        success: true,
+        data: employee
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  async getEmployeeEvents(req, res, next) {
+    try {
+      const events = await employeeService.getEmployeeEvents(req.params.id, req.user._id);
+
+      res.status(200).json({
+        success: true,
+        data: events
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  async updateEmployee(req, res, next) {
+    try {
+      const employee = await employeeService.updateEmployee(
+        req.params.id,
+        req.body,
+        req.user._id
+      );
+
+      res.status(200).json({
+        success: true,
+        message: 'Employee updated successfully',
+        data: employee
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  async deleteEmployee(req, res, next) {
+    try {
+      const result = await employeeService.deleteEmployee(req.params.id, req.user._id);
+
+      res.status(200).json({
+        success: true,
+        message: result.message
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
 }
 
 module.exports = new EmployeeController();
