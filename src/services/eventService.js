@@ -346,14 +346,10 @@ class EventService {
     return employees;
   }
 
-  async getEventInvitation(eventId, userId) {
+  async getEventInvitation(eventId) {
     const invitation = await eventRepository.getInvitation(eventId);
-
-      if (invitation === null) {
-        throw new NotFoundException('Event not found');
-    }
-
-    // Get event details
+    if (invitation === null) throw new NotFoundException('Event not found');
+    
     const event = await eventRepository.findById(eventId);
 
     return {
