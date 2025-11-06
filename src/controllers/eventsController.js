@@ -138,10 +138,7 @@ class EventController {
 
   async getEventInvitation(req, res, next) {
     try {
-      const invitation = await eventService.getEventInvitation(
-        req.params.id,
-        req.user._id
-      );
+      const invitation = await eventService.getEventInvitation(req.params.id);
 
       res.status(200).json({
         success: true,
