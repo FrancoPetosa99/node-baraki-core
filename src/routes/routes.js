@@ -17,7 +17,7 @@ const baseEventRoute = '/events';
 router.post(baseEventRoute + '/:id/guest', authMiddleware, asyncMiddleware(eventController.addGuest));
 router.get(baseEventRoute + '/:id/guests', authMiddleware, asyncMiddleware(eventController.getEventGuests));
 router.delete(baseEventRoute + '/:event_id/guest/:guest_id', authMiddleware, asyncMiddleware(eventController.removeGuest));
-router.get(baseEventRoute + '/:id/invitations', authMiddleware, asyncMiddleware(eventController.getEventInvitation));
+router.get(baseEventRoute + '/:id/invitations', asyncMiddleware(eventController.getEventInvitation));
 router.get(baseEventRoute + '/:id/employees', authMiddleware, asyncMiddleware(eventController.getEventEmployees));
 router.get(baseEventRoute, authMiddleware, asyncMiddleware(eventController.searchEvents));
 // Events: ABML
