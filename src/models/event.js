@@ -107,11 +107,6 @@ const eventSchema = new mongoose.Schema({
         type: paymentSchema,
         required: true
     },
-    assignments: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'Assignment',
-        default: []
-    },
     invitation: {
         type: invitationSchema,
         required: true
