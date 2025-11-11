@@ -167,8 +167,7 @@ class EventService {
     if (date_from || date_to) {
       events = await eventRepository.findByDateRange(date_from, date_to, {
         skip,
-        limit: parseInt(limit),
-        populate: ['assignments']
+        limit: parseInt(limit)
       });
     } else {
       // Search filter (host name or email)
@@ -183,8 +182,7 @@ class EventService {
       events = await eventRepository.find(filter, {
         skip,
         limit: parseInt(limit),
-        sort: { date: -1 },
-        populate: ['assignments']
+        sort: { date: -1 }
       });
     }
 
