@@ -134,12 +134,10 @@ class EventService {
     return event;
   }
 
-  async getEvent(eventId, userId) {
-    const event = await eventRepository.findById(eventId, {
-      populate: ['assignments']
-    });
+  async getEvent(eventId) {
+    const event = await eventRepository.findById(eventId, {populate: ['assignments']});
 
-      if (!event) {
+    if (!event) {
         throw new NotFoundException('Event not found');
     }
 
