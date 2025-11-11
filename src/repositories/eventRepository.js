@@ -104,30 +104,6 @@ class EventRepository {
     return ev || null;
   }
 
-  async addAssignment(eventId, assignmentId, { session } = {}) {
-    if (!mongoose.Types.ObjectId.isValid(eventId) || !mongoose.Types.ObjectId.isValid(assignmentId)) {
-      return null;
-    }
-    
-    return Event.findByIdAndUpdate(
-      eventId,
-      { $addToSet: { assignments: new mongoose.Types.ObjectId(assignmentId) } },
-      { new: true, session }
-    ).lean().exec();
-  }
-
-  async removeAssignment(eventId, assignmentId, { session } = {}) {
-    if (!mongoose.Types.ObjectId.isValid(eventId) || !mongoose.Types.ObjectId.isValid(assignmentId)) {
-      return null;
-    }
-    
-    return Event.findByIdAndUpdate(
-      eventId,
-      { $pull: { assignments: new mongoose.Types.ObjectId(assignmentId) } },
-      { new: true, session }
-    ).lean().exec();
-  }
-
   async guestExists(eventId, email) {
     if (!mongoose.Types.ObjectId.isValid(eventId)) return false;
     
