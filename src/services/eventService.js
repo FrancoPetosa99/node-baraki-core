@@ -135,7 +135,7 @@ class EventService {
   }
 
   async getEvent(eventId) {
-    const event = await eventRepository.findById(eventId, {populate: ['assignments']});
+    const event = await eventRepository.findById(eventId);
 
     if (!event) {
         throw new NotFoundException('Event not found');
