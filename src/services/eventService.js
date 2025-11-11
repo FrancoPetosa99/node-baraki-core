@@ -306,36 +306,7 @@ class EventService {
   }
 
   // ============ EMPLOYEE & INVITATION METHODS ============
-
-  async getEventEmployees(eventId, userId) {
-    const event = await eventRepository.findById(eventId, {
-      populate: [{
-        path: 'assignments',
-        populate: {
-          path: 'employee_id',
-          model: 'Employee'
-        }
-      }]
-    });
-
-    if (!event) {
-      throw {
-        status: 404,
-        message: 'Event not found'
-      };
-    }
-
-    const employees = event.assignments.map(assignment => ({
-      ...assignment.employee_id,
-      assignment: {
-        role: assignment.role,
-        status: assignment.status
-      }
-    }));
-
-    return employees;
-  }
-
+  
   async getEventInvitation(eventId) {
     const invitation = await eventRepository.getInvitation(eventId);
     if (invitation === null) throw new NotFoundException('Event not found');
