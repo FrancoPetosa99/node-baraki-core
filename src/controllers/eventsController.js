@@ -115,23 +115,7 @@ class EventController {
       return next(error);
     }
   }
-
-  async getEventEmployees(req, res, next) {
-    try {
-      const employees = await eventService.getEventEmployees(
-        req.params.id,
-        req.user._id
-      );
-
-      res.status(200).json({
-        success: true,
-        data: employees
-      });
-    } catch (error) {
-      return next(error);
-    }
-  }
-
+  
   async getEventInvitation(req, res, next) {
     try {
       const invitation = await eventService.getEventInvitation(req.params.id);
