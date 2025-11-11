@@ -263,7 +263,7 @@ class EventService {
 
   // ============ GUEST MANAGEMENT ============
 
-  async addGuest(eventId, guestData, userId) {
+  async addGuest(eventId, guestData) {
     const validation = this.validateGuest(guestData);
     if (!validation.isValid) {
         throw new BadRequestException('Validation failed', validation.errors);
@@ -276,23 +276,17 @@ class EventService {
       assist: guestData.assist || false
     };
 
-    const updatedEvent = await eventRepository.addGuest(eventId, guest);
-
-      if (!updatedEvent) {
+    const event = await eventRepository.findById(eventId);
+    if (!event) {
         throw new NotFoundException('Event not found');
     }
 
-    // Check if guest was actually added (not duplicate)
-    const originalEvent = await eventRepository.findById(eventId);
-    const guestExists = originalEvent.confirmed_guests.some(
-      g => g.email === guest.email
-    );
-
-      if (!guestExists) {
+    const guestExists = event.confirmed_guests.some(g => g.email === guest.email);
+    if (guestExists) {
         throw new ConflictException('Guest with this email already exists');
     }
 
-    return updatedEvent;
+    return eventRepository.addGuest(eventId, guest);
   }
 
   async getEventGuests(eventId, userId) {
