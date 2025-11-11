@@ -14,7 +14,7 @@ router.post(baseAuthRoute + '/register', asyncMiddleware(authController.register
 
 const baseEventRoute = '/events';
 // Events: Specific Use cases.
-router.post(baseEventRoute + '/:id/guest', authMiddleware, asyncMiddleware(eventController.addGuest));
+router.post(baseEventRoute + '/:id/guest', asyncMiddleware(eventController.addGuest));
 router.get(baseEventRoute + '/:id/guests', authMiddleware, asyncMiddleware(eventController.getEventGuests));
 router.delete(baseEventRoute + '/:event_id/guest/:guest_id', authMiddleware, asyncMiddleware(eventController.removeGuest));
 router.get(baseEventRoute + '/:id/invitations', asyncMiddleware(eventController.getEventInvitation));
