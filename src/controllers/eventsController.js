@@ -74,12 +74,8 @@ class EventController {
 
   async addGuest(req, res, next) {
     try {
-      const event = await eventService.addGuest(
-        req.params.id,
-        req.body,
-        req.user._id
-      );
-
+      const event = await eventService.addGuest(req.params.id, req.body);
+      
       res.status(201).json({
         success: true,
         message: 'Guest added successfully',
