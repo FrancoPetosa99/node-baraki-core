@@ -5,12 +5,7 @@ class AssignmentController {
     try {
       const { event_id, employee_id } = req.params;
       
-      const assignment = await assignmentService.createAssignment(
-        event_id,
-        employee_id,
-        req.body,
-        req.user._id
-      );
+      const assignment = await assignmentService.createAssignment(event_id, employee_id);
 
       res.status(201).json({
         success: true,
