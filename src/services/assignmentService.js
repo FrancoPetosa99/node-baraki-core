@@ -160,9 +160,7 @@ class AssignmentService {
       throw new NotFoundException('Event not found');
     }
     
-    const assignments = await assignmentRepository.findByEvent(eventId, {populate: ['employee']});
-
-    return assignments;
+    return assignmentRepository.findByEvent(eventId, {populate: ['employee']});
   }
 
   async getAssignmentsByEmployee(employeeId) {
