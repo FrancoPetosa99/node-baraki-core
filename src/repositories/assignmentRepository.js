@@ -88,14 +88,18 @@ class AssignmentRepository {
     }).select('_id').lean().exec();
   }
 
-  async findByEvent(eventId, { populate = [] } = {}) {
+  async findByEvent(eventId) {
     if (!mongoose.Types.ObjectId.isValid(eventId)) return [];
-    return Assignment.find({ event: eventId }, { populate });
+    const q = Assignment.find({ event: eventId });
+    q.populate("employee");
+    return q.lean().exec();
   }
 
-  async findByEmployee(employeeId, { populate = [] } = {}) {
+  async findByEmployee(employeeId) {
     if (!mongoose.Types.ObjectId.isValid(employeeId)) return [];
-    return Assignment.find({ employee: employeeId }, { populate });
+    const q = Assignment.find({ employee: employeeId });
+    q.populate("event");
+    return q.lean().exec();
   }
 }
 
