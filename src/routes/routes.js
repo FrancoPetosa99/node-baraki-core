@@ -34,8 +34,10 @@ router.put(baseEmployeesRoute + '/:id', authMiddleware, asyncMiddleware(employee
 router.delete(baseEmployeesRoute + '/:id', authMiddleware, asyncMiddleware(employeeController.deleteEmployee));
 
 const baseAssignmentsRoute = '/assignments';
-router.post(baseAssignmentsRoute + '/event/:event_id/employee/:employee_id', authMiddleware, asyncMiddleware(assignmentController.createAssignment));
-router.put(baseAssignmentsRoute + '/event/:event_id/employee/:employee_id', authMiddleware, asyncMiddleware(assignmentController.updateAssignment));
-router.delete(baseAssignmentsRoute + '/event/:event_id/employee/:employee_id', authMiddleware, asyncMiddleware(assignmentController.deleteAssignment));
+router.post(baseAssignmentsRoute + '/events/:event_id/employees/:employee_id', authMiddleware, asyncMiddleware(assignmentController.createAssignment));
+router.get(baseAssignmentsRoute + '/events/:event_id', authMiddleware, asyncMiddleware(assignmentController.getAssignmentsByEvent));
+router.get(baseAssignmentsRoute + '/employees/:employee_id', authMiddleware, asyncMiddleware(assignmentController.getAssignmentsByEmployee));
+router.put(baseAssignmentsRoute + '/events/:event_id/employees/:employee_id', authMiddleware, asyncMiddleware(assignmentController.updateAssignment));
+router.delete(baseAssignmentsRoute + '/events/:event_id/employees/:employee_id', authMiddleware, asyncMiddleware(assignmentController.deleteAssignment));
 
 module.exports = router;

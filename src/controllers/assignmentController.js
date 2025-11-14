@@ -56,6 +56,41 @@ class AssignmentController {
       return next(error);
     }
   }
+
+  async getAssignmentsByEvent(req, res, next) {
+    try {
+      const { event_id } = req.params;
+      
+      const assignments = await assignmentService.getAssignmentsByEvent(
+        event_id,
+        req.user._id
+      );
+
+      res.status(200).json({
+        success: true,
+        message: 'Assignments retrieved successfully',
+        data: assignments
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
+
+  async getAssignmentsByEmployee(req, res, next) {
+    try {
+      const { employee_id } = req.params;
+      
+      const assignments = await assignmentService.getAssignmentsByEmployee(employee_id);
+
+      res.status(200).json({
+        success: true,
+        message: 'Assignments retrieved successfully',
+        data: assignments
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
 }
 
 module.exports = new AssignmentController();

@@ -178,46 +178,32 @@ class AssignmentService {
     return { message: 'Assignment deleted successfully' };
   }
 
-  async getAssignmentsByEvent(eventId, userId) {
+  async getAssignmentsByEvent(eventId) {
     if (!mongoose.Types.ObjectId.isValid(eventId)) {
-      throw {
-        status: 400,
-        message: 'Invalid event ID'
-      };
+      throw new BadRequestException('Invalid event ID');
     }
-
-    // Verify event exists using EventService
-    try {
-      await eventService.getEvent(eventId, userId);
-    } catch (error) {
-      throw {
-        status: 404,
-        message: 'Event not found'
-      };
+  
+    const event = await eventService.getEvent(eventId);
+    if (!event) {
+      throw new NotFoundException('Event not found');
     }
-
-    const assignments = await assignmentRepository.findByEvent(eventId, {
-      populate: ['employee']
-    });
+    
+    const assignments = await assignmentRepository.findByEvent(eventId, {populate: ['employee']});
 
     return assignments;
   }
 
-  async getAssignmentsByEmployee(employeeId, userId) {
+  async getAssignmentsByEmployee(employeeId) {
     if (!mongoose.Types.ObjectId.isValid(employeeId)) {
       throw new BadRequestException('Invalid employee ID');
     }
 
-    // Verify employee exists using EmployeeService
-    try {
-      await employeeService.getEmployee(employeeId, userId);
-    } catch (error) {
+    const employee = await employeeService.getEmployee(employeeId);
+    if (!employee) {
       throw new NotFoundException('Employee not found');
     }
 
-    const assignments = await assignmentRepository.findByEmployee(employeeId, {
-      populate: ['event']
-    });
+    const assignments = await assignmentRepository.findByEmployee(employeeId, {populate: ['event']});
 
     return assignments;
   }
