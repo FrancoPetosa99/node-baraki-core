@@ -133,49 +133,21 @@ class AssignmentService {
     return populatedAssignment;
   }
 
-  async deleteAssignment(eventId, employeeId, userId) {
-    // Validate ObjectIds
+  async deleteAssignment(eventId, employeeId) {
     if (!mongoose.Types.ObjectId.isValid(eventId)) {
       throw new BadRequestException('Invalid event ID');
     }
 
     if (!mongoose.Types.ObjectId.isValid(employeeId)) {
-      throw {
-        status: 400,
-        message: 'Invalid employee ID'
-      };
+      throw new BadRequestException('Invalid employee ID');
     }
-
-    // Verify event exists using EventService
-    try {
-      await eventService.getEvent(eventId, userId);
-    } catch (error) {
-      throw new NotFoundException('Event not found');
-    }
-
-    // Verify employee exists using EmployeeService
-    try {
-      await employeeService.getEmployee(employeeId, userId);
-    } catch (error) {
-      throw new NotFoundException('Employee not found');
-    }
-
-    // Check if assignment exists
+    
     const assignment = await assignmentRepository.findByEventAndEmployee(eventId, employeeId);
     if (!assignment) {
-      throw {
-        status: 404,
-        message: 'Assignment not found'
-      };
+      throw new NotFoundException('Assignment not found');
     }
 
-    // Remove assignment from event's assignments array
-    await eventService.removeAssignment(eventId, assignment._id);
-
-    // Delete assignment
-    await assignmentRepository.deleteByEventAndEmployee(eventId, employeeId);
-
-    return { message: 'Assignment deleted successfully' };
+    return assignmentRepository.deleteByEventAndEmployee(eventId, employeeId);
   }
 
   async getAssignmentsByEvent(eventId) {
