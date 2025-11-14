@@ -42,15 +42,11 @@ class AssignmentController {
     try {
       const { event_id, employee_id } = req.params;
       
-      const result = await assignmentService.deleteAssignment(
-        event_id,
-        employee_id,
-        req.user._id
-      );
+      await assignmentService.deleteAssignment(event_id, employee_id);
 
       res.status(200).json({
         success: true,
-        message: result.message
+        message: 'Assignment successfully deleted'
       });
     } catch (error) {
       return next(error);
