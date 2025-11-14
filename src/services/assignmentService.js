@@ -173,9 +173,7 @@ class AssignmentService {
       throw new NotFoundException('Employee not found');
     }
 
-    const assignments = await assignmentRepository.findByEmployee(employeeId, {populate: ['event']});
-
-    return assignments;
+    return assignmentRepository.findByEmployee(employeeId, {populate: ['event']});
   }
 }
 
