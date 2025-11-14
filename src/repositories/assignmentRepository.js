@@ -54,7 +54,7 @@ class AssignmentRepository {
     if (!mongoose.Types.ObjectId.isValid(eventId) || !mongoose.Types.ObjectId.isValid(employeeId)) {
       return null;
     }
-    return this.findOne({ event: eventId, employee: employeeId }, { populate });
+    return Assignment.findOne({ event: eventId, employee: employeeId }, { populate });
   }
 
   async updateByEventAndEmployee(eventId, employeeId, update) {
@@ -82,21 +82,20 @@ class AssignmentRepository {
     if (!mongoose.Types.ObjectId.isValid(eventId) || !mongoose.Types.ObjectId.isValid(employeeId)) {
       return false;
     }
-    const assignment = await Assignment.findOne({
+    return Assignment.findOne({
       event: eventId,
       employee: employeeId
     }).select('_id').lean().exec();
-    return !!assignment;
   }
 
   async findByEvent(eventId, { populate = [] } = {}) {
     if (!mongoose.Types.ObjectId.isValid(eventId)) return [];
-    return this.find({ event: eventId }, { populate });
+    return Assignment.find({ event: eventId }, { populate });
   }
 
   async findByEmployee(employeeId, { populate = [] } = {}) {
     if (!mongoose.Types.ObjectId.isValid(employeeId)) return [];
-    return this.find({ employee: employeeId }, { populate });
+    return Assignment.find({ employee: employeeId }, { populate });
   }
 }
 
