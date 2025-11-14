@@ -17,11 +17,11 @@ class EventController {
 
   async searchEvents(req, res, next) {
     try {
-      const result = await eventService.searchEvents(req.query, req.user._id);
+      const events = await eventService.searchEvents(req.query);
 
       res.status(200).json({
         success: true,
-        data: result
+        data: events
       });
     } catch (error) {
       return next(error);

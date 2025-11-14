@@ -144,7 +144,7 @@ class EventService {
     return event;
   }
 
-  async searchEvents(filters, userId) {
+  async searchEvents(filters) {
     const {
       page = 1,
       limit = 10,
@@ -157,6 +157,11 @@ class EventService {
     const skip = (page - 1) * limit;
     let events;
     let filter = {};
+
+    // Default filter: events from today onwards
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    filter.date = { $gte: today };
 
     // Build filter
     if (status) {
@@ -182,7 +187,7 @@ class EventService {
       events = await eventRepository.find(filter, {
         skip,
         limit: parseInt(limit),
-        sort: { date: -1 }
+        sort: { date: 1 }
       });
     }
 
@@ -201,7 +206,7 @@ class EventService {
     };
   }
 
-  async updateEvent(eventId, updateData, userId) {
+  async updateEvent(eventId, updateData) {
     const event = await eventRepository.findById(eventId);
 
       if (!event) {
@@ -236,7 +241,7 @@ class EventService {
     return updatedEvent;
   }
 
-  async deleteEvent(eventId, userId) {
+  async deleteEvent(eventId) {
     const event = await eventRepository.findById(eventId);
 
     if (!event) {
