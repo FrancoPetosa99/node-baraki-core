@@ -57,10 +57,7 @@ class AssignmentController {
     try {
       const { event_id } = req.params;
       
-      const assignments = await assignmentService.getAssignmentsByEvent(
-        event_id,
-        req.user._id
-      );
+      const assignments = await assignmentService.getAssignmentsByEvent(event_id);
 
       res.status(200).json({
         success: true,
